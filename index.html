@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shlok Mane – Still Learning</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #ffffff;
+      padding: 30px 20px 40px;
+      display: flex;
+      justify-content: center;
+      font-family: 'Courier New', Courier, monospace;
+      color: #111111;
+    }
+
+    .container {
+      max-width: 820px;
+      width: 100%;
+      background: #ffffff;
+      padding-bottom: 40px;
+    }
+
+    /* -------- HEADER WITH PHOTO -------- */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #f0f0f0;
+      border: 2px solid #222;
+    }
+
+    .header-text {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .header-text .name {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      color: #000;
+    }
+
+    .header-text .bio {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #1a1a1a;
+    }
+
+    .header-text .bio strong {
+      font-weight: 700;
+    }
+
+    /* -------- SECTIONS -------- */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-heading {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #555;
+      border-bottom: 1.5px solid #ccc;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+
+    /* -------- TABLE (CURRENT WORK) -------- */
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .stats-table tr {
+      border-bottom: 1px solid #ddd;
+    }
+
+    .stats-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .stats-table td {
+      padding: 12px 0;
+      vertical-align: middle;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .stats-table .stat-label {
+      font-weight: 400;
+      color: #111;
+      width: 70%;
+    }
+
+    .stats-table .stat-value {
+      font-weight: 600;
+      text-align: right;
+      width: 30%;
+      font-size: 13px;
+      color: #111;
+    }
+
+    .stats-table .ai-highlight {
+      font-style: italic;
+      color: #005f5f;
+      font-weight: 600;
+    }
+
+    /* -------- AI PROJECTS BLOCK -------- */
+    .ai-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 8px 0 4px;
+    }
+
+    .ai-item {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+    }
+
+    .ai-item-title {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .ai-item-desc {
+      font-size: 13px;
+      color: #222;
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* -------- SKILLS GRID (TOOLKIT) -------- */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 30px;
+      padding-top: 4px;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid #eee;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 15px;
+      font-weight: 400;
+      color: #111;
+    }
+
+    .skill-item .bullet {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* -------- FOOTER (THANK YOU + STILL LEARNING) -------- */
+    .thankyou-section {
+      margin-top: 16px;
+      border-top: 1.5px solid #aaa;
+      padding-top: 20px;
+      text-align: center;
+    }
+
+    .thankyou-line {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #000;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .footer-line {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      color: #777;
+      margin-top: 14px;
+      border-top: 1px solid #ddd;
+      padding-top: 14px;
+      text-transform: uppercase;
+    }
+
+    /* -------- RESPONSIVE -------- */
+    @media (max-width: 600px) {
+      .header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .skills-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .thankyou-line {
+        font-size: 30px;
+      }
+      .avatar {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    /* ====== HIDDEN QUOTE CARD ====== */
+    .quote-card {
+      position: fixed;
+      bottom: 30px;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      background: #f7f7f7;
+      border-radius: 12px 0 0 12px;
+      border: 1px solid #ddd;
+      border-right: none;
+      opacity: 0.95;
+      max-width: 380px;
+      cursor: pointer;
+      transform: translateX(calc(100% - 28px));
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease, box-shadow 0.3s ease;
+    }
+
+    .quote-card:hover {
+      opacity: 1;
+      box-shadow: 0 6px 28px rgba(0,0,0,0.18);
+    }
+
+    /* Visible when near bottom or opened */
+    .quote-card.at-bottom, .quote-card.open {
+      transform: translateX(0);
+    }
+
+    .card-handle {
+      flex-shrink: 0;
+      width: 28px;
+      height: 60px;
+      background: #111;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px 0 0 12px;
+      font-size: 18px;
+      font-weight: 400;
+      transition: background 0.3s;
+      font-family: Georgia, serif;
+    }
+
+    .quote-card.open .card-handle, .quote-card.at-bottom .card-handle {
+      background: #FDDA0D;
+    }
+
+    .card-handle::before {
+      content: '❝';
+      display: block;
+      animation: pulse-handle 2.4s infinite;
+    }
+
+    @keyframes pulse-handle {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+
+    .quote-card.open .card-handle::before, .quote-card.at-bottom .card-handle::before {
+      animation: none;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .card-content {
+      padding: 14px 20px 14px 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .card-content p {
+      font-size: 15px;
+      font-weight: 600;
+      color: #111;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .card-content span {
+      display: block;
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mobile tweak for card */
+    @media (max-width: 500px) {
+      .quote-card {
+        transform: translateX(calc(100% - 24px));
+        bottom: 16px;
+        max-width: 280px;
+      }
+      .card-content p {
+        font-size: 13px;
+      }
+      .card-handle {
+        width: 24px;
+        height: 50px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ====== HEADER ====== -->
+    <header class="header">
+      <img src="shlok-photo.jpg" alt="Shlok Mane" class="avatar">
+      <div class="header-text">
+        <div class="name">SHLOK MANE</div>
+        <div class="bio">
+          I am a front-end developer continuously <strong>learning and refining</strong> my craft. While I've successfully delivered 15+ full-scale platforms, I approach every project with the humility of a student, always eager to adapt to new tools and techniques.
+        </div>
+      </div>
+    </header>
+
+    <!-- ====== CURRENT WORK ====== -->
+    <section class="section">
+      <div class="section-heading">I CURRENTLY WORK AT</div>
+      <table class="stats-table">
+        <tr>
+          <td class="stat-label">
+            Freelance Developer<br>
+            <span style="font-size: 13px; color: #005f5f; font-weight: 600;">✦ Built 3 apps for personal use using free AI tools</span>
+          </td>
+          <td class="stat-value">2024 – Present</td>
+        </tr>
+        <tr>
+          <td class="stat-label">iDigitize Infotech LLP · Front-End Developer</td>
+          <td class="stat-value">2022 – 2024</td>
+        </tr>
+        <tr>
+          <td class="stat-label">Education: MSc IT · Valia College</td>
+          <td class="stat-value">2020 – 2022</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- ====== PERSONAL AI PROJECTS ====== -->
+    <section class="section">
+      <div class="section-heading">PERSONAL AI PROJECTS</div>
+      <div class="ai-grid">
+        <div class="ai-item">
+          <div class="ai-item-title">✦ Smart Bookmark & URL Visualizer</div>
+          <div class="ai-item-desc">Android app built with Jetpack Compose & Room DB that captures websites into beautiful media cards with auto-screenshots and ad-blocking.</div>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">✦ Offline-First Sync Journaling Suite</div>
+          <div class="ai-item-desc">Cross-platform mobile app (React Native, Expo, Supabase) with offline-first data sync and smooth low-latency journaling.</div>
+        </div>
+        <div class="ai-item">
+          <div class="ai-item-title">✦ Distraction-Free Desktop Writing Engine</div>
+          <div class="ai-item-desc">Electron-based editor with Markdown support, file trees, native asset manager and custom PDF compilation.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== TOOLKIT ====== -->
+    <section class="section">
+      <div class="section-heading">CURRENT TOOLKIT</div>
+      <div class="skills-grid">
+        <div class="skill-item"><span class="bullet">●</span> React.js</div>
+        <div class="skill-item"><span class="bullet">●</span> Tailwind CSS</div>
+        <div class="skill-item"><span class="bullet">●</span> JavaScript (ES6+)</div>
+        <div class="skill-item"><span class="bullet">●</span> WordPress (Divi)</div>
+        <div class="skill-item"><span class="bullet">●</span> OpenCart</div>
+        <div class="skill-item"><span class="bullet">●</span> WooCommerce</div>
+        <div class="skill-item"><span class="bullet">●</span> Supabase</div>
+        <div class="skill-item"><span class="bullet">●</span> TanStack Query</div>
+        <div class="skill-item"><span class="bullet">●</span> React Hook Form</div>
+        <div class="skill-item"><span class="bullet">●</span> Expo / React Native</div>
+      </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <section class="thankyou-section">
+      <div class="thankyou-line">THANK YOU</div>
+      <div class="footer-line">STILL LEARNING</div>
+    </section>
+
+  </div>
+
+  <!-- ====== HIDDEN QUOTE CARD ====== -->
+  <div class="quote-card" id="quoteCard">
+    <div class="card-handle"></div>
+    <div class="card-content">
+      <p>"Houston, we have a problem"</p>
+      <span>— Apollo 13 (1993)</span>
+    </div>
+  </div>
+
+  <script>
+    const card = document.getElementById('quoteCard');
+    let lastScrollY = window.scrollY;
+
+    function handleScroll() {
+      const currentScrollY = window.scrollY;
+      const scrollPosition = currentScrollY + window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const threshold = documentHeight - 200;
+
+      // If scrolling up while the card is open -> close it
+      if (currentScrollY < lastScrollY && card.classList.contains('open')) {
+        card.classList.remove('open', 'at-bottom');
+      }
+
+      // If near bottom and card is NOT open -> make it peek
+      if (scrollPosition >= threshold && !card.classList.contains('open')) {
+        card.classList.add('at-bottom');
+      }
+
+      // If far from bottom and card is NOT open -> hide fully (just peek trigger)
+      if (scrollPosition < threshold && !card.classList.contains('open')) {
+        card.classList.remove('at-bottom');
+      }
+
+      lastScrollY = currentScrollY;
+    }
+
+    window.addEventListener('scroll', handleScroll);
+
+    card.addEventListener('click', function() {
+      this.classList.toggle('open');
+
+      if (!this.classList.contains('open')) {
+        // After closing, re-evaluate position to decide if it should peek
+        const scrollPosition = window.scrollY + window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const threshold = documentHeight - 200;
+
+        if (scrollPosition >= threshold) {
+          this.classList.add('at-bottom');
+        } else {
+          this.classList.remove('at-bottom');
+        }
+      } else {
+        this.classList.add('at-bottom');
+      }
+    });
+  </script>
+</body>
+</html>
