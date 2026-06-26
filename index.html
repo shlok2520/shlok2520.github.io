@@ -18,6 +18,8 @@
       justify-content: center;
       font-family: 'Courier New', Courier, monospace;
       color: #111111;
+      overflow-y: auto; /* Native single scrollbar */
+      height: auto;
     }
 
     .container {
@@ -25,6 +27,7 @@
       width: 100%;
       background: #ffffff;
       padding-bottom: 40px;
+      /* FIXED: Removed height: 100vh and overflow-y: auto to prevent double scrollbars */
     }
 
     /* -------- HEADER WITH PHOTO -------- */
@@ -519,6 +522,41 @@
         this.classList.add('at-bottom');
       }
     });
+
+
+    // ==========================================
+    // ULTRA SMOOTH SCROLL (LERP) IMPLEMENTATION
+    // ==========================================
+    let targetY = window.scrollY;
+    let currentY = window.scrollY;
+    const ease = 0.08; // Lower = smoother and slower. 0.06-0.09 is ideal.
+
+    function smoothScrollLoop() {
+      // Calculate the difference and apply easing
+      currentY += (targetY - currentY) * ease;
+      
+      // Prevent tiny looping at the end (gives a crisp stop)
+      if (Math.abs(targetY - currentY) < 0.1) {
+        currentY = targetY;
+      }
+
+      window.scrollTo(0, Math.round(currentY));
+      requestAnimationFrame(smoothScrollLoop);
+    }
+
+    // Override the default wheel event to control the scroll amount
+    window.addEventListener('wheel', (e) => {
+      e.preventDefault(); // Prevent the default jumpy scroll
+      
+      // Add the wheel delta to the target
+      targetY += e.deltaY;
+      
+      // Clamp it so we don't scroll past the top or bottom of the page
+      targetY = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, targetY));
+    }, { passive: false });
+
+    // Start the smooth scroll animation loop
+    requestAnimationFrame(smoothScrollLoop);
   </script>
 </body>
 </html>
