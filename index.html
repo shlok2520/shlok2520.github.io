@@ -359,6 +359,54 @@
         font-size: 16px;
       }
     }
+
+    /* ====== NEW SECTION: APP ICONS ====== */
+    .intro-text {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 18px;
+      font-style: italic;
+    }
+    .icon-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .icon-card {
+      background: #f9f9f9;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 16px; /* Made smaller */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      aspect-ratio: 1 / 1;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    .icon-card:hover {
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      transform: scale(1.02);
+    }
+    .icon-card img {
+      max-width: 65%; /* Reduced image size */
+      height: auto;
+      border-radius: 16px;
+      object-fit: contain;
+    }
+    /* Mobile tweak for icons */
+    @media (max-width: 500px) {
+      .icon-grid {
+        gap: 10px;
+      }
+      .icon-card {
+        padding: 12px;
+      }
+      .icon-card img {
+        max-width: 60%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -433,6 +481,29 @@
             pacing, and the sheer effort behind a 60-second clip. It's a constant exercise in humility 
             and creativity—proving that trying and learning matter far more than instant success.
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== APP ICONS (SMALLER BOXES) ====== -->
+    <section class="section">
+      <div class="section-heading">APP ICONS</div>
+      <div class="intro-text">
+        I know these logos are not the greatest or the most visually stunning. They're the result of a developer trying his hand at design — born out of multiple drafts and late nights. I'm sharing them because progress, not perfection, is what matters.
+      </div>
+      <div class="icon-grid">
+        <!-- Replace the src below with your actual app icon images -->
+        <div class="icon-card">
+          <img src="Desktop Writer.png" alt="Desktop Writer">
+        </div>
+        <div class="icon-card">
+          <img src="Mobile Writing.png" alt="Mobile Writing">
+        </div>
+        <div class="icon-card">
+          <img src="News.png" alt="News">
+        </div>
+        <div class="icon-card">
+          <img src="Video Camera.png" alt="Video-Camera">
         </div>
       </div>
     </section>
