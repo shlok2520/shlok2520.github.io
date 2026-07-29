@@ -18,7 +18,7 @@
       justify-content: center;
       font-family: 'Courier New', Courier, monospace;
       color: #111111;
-      overflow-y: auto; /* Native single scrollbar */
+      overflow-y: auto; 
       height: auto;
     }
 
@@ -27,7 +27,6 @@
       width: 100%;
       background: #ffffff;
       padding-bottom: 40px;
-      /* FIXED: Removed height: 100vh and overflow-y: auto to prevent double scrollbars */
     }
 
     /* -------- HEADER WITH PHOTO -------- */
@@ -378,7 +377,7 @@
       background: #f9f9f9;
       border: 1px solid #eee;
       border-radius: 12px;
-      padding: 16px; /* Made smaller */
+      padding: 16px; 
       display: flex;
       justify-content: center;
       align-items: center;
@@ -390,7 +389,7 @@
       transform: scale(1.02);
     }
     .icon-card img {
-      max-width: 65%; /* Reduced image size */
+      max-width: 65%; 
       height: auto;
       border-radius: 16px;
       object-fit: contain;
@@ -485,11 +484,11 @@
       </div>
     </section>
 
-    <!-- ====== APP ICONS (SMALLER BOXES) ====== -->
+    <!-- ====== APP ICONS ====== -->
     <section class="section">
       <div class="section-heading">APP ICONS</div>
       <div class="intro-text">
-        Sure, they aren't shiny or classy masterpieces, but at least they were made by a human, instead of burning tokens.
+        I know these logos are not the greatest or the most visually stunning. They're the result of a developer trying his hand at design — born out of multiple drafts and late nights. I'm sharing them because progress, not perfection, is what matters.
       </div>
       <div class="icon-grid">
         <!-- Replace the src below with your actual app icon images -->
@@ -508,7 +507,7 @@
       </div>
     </section>
 
-    <!-- ====== CURRENTLY EXPLORING (FORMERLY TOOLKIT) ====== -->
+    <!-- ====== CURRENTLY EXPLORING ====== -->
     <section class="section">
       <div class="section-heading">CURRENTLY EXPLORING</div>
       <div class="skills-grid">
@@ -596,17 +595,15 @@
 
 
     // ==========================================
-    // ULTRA SMOOTH SCROLL (LERP) IMPLEMENTATION
+    // ULTRA SMOOTH SCROLL (LERP) - DESKTOP & MOBILE
     // ==========================================
     let targetY = window.scrollY;
     let currentY = window.scrollY;
     const ease = 0.08; // Lower = smoother and slower. 0.06-0.09 is ideal.
 
     function smoothScrollLoop() {
-      // Calculate the difference and apply easing
       currentY += (targetY - currentY) * ease;
       
-      // Prevent tiny looping at the end (gives a crisp stop)
       if (Math.abs(targetY - currentY) < 0.1) {
         currentY = targetY;
       }
@@ -615,15 +612,26 @@
       requestAnimationFrame(smoothScrollLoop);
     }
 
-    // Override the default wheel event to control the scroll amount
+    // 1. Desktop Mouse Wheel Scroll
     window.addEventListener('wheel', (e) => {
-      e.preventDefault(); // Prevent the default jumpy scroll
-      
-      // Add the wheel delta to the target
+      e.preventDefault();
       targetY += e.deltaY;
-      
-      // Clamp it so we don't scroll past the top or bottom of the page
       targetY = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, targetY));
+    }, { passive: false });
+
+    // 2. Mobile Finger Touch Scroll (Added to fix phone scrolling)
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: false });
+
+    window.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const touchCurrentY = e.touches[0].clientY;
+      const deltaY = touchStartY - touchCurrentY;
+      targetY += deltaY;
+      targetY = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, targetY));
+      touchStartY = touchCurrentY;
     }, { passive: false });
 
     // Start the smooth scroll animation loop
