@@ -9,7 +9,7 @@ status: "draft"
 
 ## 01 — Introduction
 
-> **Writing prompt — delete this block when done:** Introduce the channel in your own words. What kind of channel is it? Why did you pick it for this study? How long did you watch it — days, weeks? What were you generally paying attention to?
+> **Writing prompt — delete this block when done:** Introduce the channel in your own words. What kind of channel is it? Why did you pick it for this study? How long did you watch it — days, weeks? What were you generally paying attention to? 
 
 ## 02 — Identity & Branding
 
