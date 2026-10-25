@@ -1,0 +1,60 @@
+# Auto-build and deploy the site on every push.
+#
+# ONE-TIME SETUP (only needed once, ~30 seconds):
+#   On github.com → your repository → Settings → Pages
+#   → under "Build and deployment" set Source to:  GitHub Actions
+#
+# After that: every time you commit a change to a studies/*.md file,
+# this workflow rebuilds the site and it goes live in about a minute.
+# You never run anything yourself.
+
+name: Build and deploy site
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch: # allows a manual run from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Don't pile up deployments — a new push replaces the in-flight one
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Turns every studies/<slug>.md into dist/studies/<slug>/index.html
+      # (clean shareable links) and bakes the study cards into the home page.
+      # Nothing to install — the Markdown renderer is included in _build/.
+      - name: Build the site from the Markdown studies
+        run: node _build/build-studies.cjs
+
+      - name: Upload the built site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

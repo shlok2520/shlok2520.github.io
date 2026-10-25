@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Channel Study | Shlok Mane</title>
+
+  <!--
+    LEGACY STUDY VIEWER — kept only so very old links keep working.
+    New links are clean, with no "#": yoursite.com/studies/channel-1/
+    (built by _build/build-studies.cjs from studies/channel-1.md).
+    If someone opens an old-style link (study.html#channel-1), this page
+    forwards them to the new clean URL automatically — and only renders the
+    old way if that page doesn't exist.
+  -->
+
+  <meta name="description" content="A hand-written channel study — branding, programming and on-screen presentation. Written by Shlok Mane." />
+  <meta name="author" content="Shlok Mane" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="color-scheme" content="light" />
+  <meta property="og:title" content="Channel Study | Shlok Mane" />
+  <meta property="og:description" content="Hand-written observations on branding, programming and on-screen design. Written by Shlok Mane." />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+
+  <!-- Inline SVG favicon (matches the homepage) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2064%2064%27%3E%3Crect%20width=%2764%27%20height=%2764%27%20rx=%2714%27%20fill=%27%23111%27/%3E%3Ctext%20x=%2732%27%20y=%2732%27%20dy=%27.35em%27%20text-anchor=%27middle%27%20font-family=%27Courier%20New,%20monospace%27%20font-size=%2730%27%20font-weight=%27700%27%20fill=%27%23fff%27%3ESM%3C/text%3E%3C/svg%3E" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #ffffff;
+      padding: 30px 20px 40px;
+      display: flex;
+      justify-content: center;
+      font-family: 'Courier New', Courier, monospace;
+      color: #111111;
+    }
+
+    .container {
+      max-width: 760px;
+      width: 100%;
+      background: #ffffff;
+      padding-bottom: 40px;
+    }
+
+    /* -------- TOP NAVIGATION -------- */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #666;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 44px;
+    }
+
+    .top-nav a {
+      color: #111;
+      text-decoration: none;
+      border-bottom: 1px dotted #999;
+      transition: border-color 0.2s;
+    }
+
+    .top-nav a:hover {
+      border-bottom: 1px solid #111;
+    }
+
+    /* -------- STUDY HEADER -------- */
+    .study-header {
+      margin-bottom: 40px;
+      border-bottom: 1.5px solid #ccc;
+      padding-bottom: 24px;
+    }
+
+    .study-kicker {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #005f5f;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .study-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      text-transform: uppercase;
+      color: #000;
+      margin-bottom: 14px;
+    }
+
+    .study-meta {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.7;
+    }
+
+    /* -------- RENDERED MARKDOWN CONTENT -------- */
+    .study-body h2 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #555;
+      border-bottom: 1.5px solid #ccc;
+      padding-bottom: 8px;
+      margin: 38px 0 16px;
+    }
+
+    .study-body h2:first-child {
+      margin-top: 0;
+    }
+
+    .study-body h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 26px 0 10px;
+    }
+
+    .study-body p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      margin: 0 0 14px;
+    }
+
+    .study-body ul,
+    .study-body ol {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #1a1a1a;
+      margin: 0 0 14px;
+      padding-left: 24px;
+    }
+
+    .study-body li {
+      margin-bottom: 6px;
+    }
+
+    .study-body strong {
+      font-weight: 700;
+    }
+
+    .study-body a {
+      color: #111;
+      border-bottom: 1px dotted #999;
+      text-decoration: none;
+    }
+
+    .study-body a:hover {
+      border-bottom-style: solid;
+    }
+
+    /* Writing prompts look like quiet dashed notes */
+    .study-body blockquote {
+      border-left: 3px solid #ccc;
+      background: #fafafa;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin: 0 0 16px;
+      font-size: 13px;
+      font-style: italic;
+      color: #666;
+      line-height: 1.7;
+    }
+
+    .study-body blockquote p {
+      margin: 0;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .study-body hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 26px 0;
+    }
+
+    .study-body img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .study-body code {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f3f3f3;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 13px;
+    }
+
+    .study-body pre {
+      background: #f7f7f7;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      margin: 0 0 14px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .study-body pre code {
+      background: none;
+      padding: 0;
+    }
+
+    /* Shown only if the Markdown renderer (CDN) is unavailable */
+    .md-fallback {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #1a1a1a;
+      background: #fafafa;
+      border: 1px dashed #ccc;
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+
+    /* -------- SHARE + BACK TO HOME -------- */
+    .study-actions {
+      margin-top: 52px;
+      border-top: 1.5px solid #aaa;
+      padding-top: 28px;
+      text-align: center;
+    }
+
+    .share-btn {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: #111;
+      color: #fff;
+      border: 1px solid #111;
+      border-radius: 8px;
+      padding: 14px 26px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .share-btn:hover {
+      background: #000;
+      transform: translateY(-1px);
+    }
+
+    .share-btn.copied {
+      background: #005f5f;
+      border-color: #005f5f;
+    }
+
+    .share-hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: 14px;
+      letter-spacing: 0.4px;
+      line-height: 1.6;
+    }
+
+    .back-home {
+      display: block;
+      margin-top: 40px;
+      border-top: 1px solid #ddd;
+      padding-top: 30px;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .back-home-line {
+      display: block;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #000;
+      line-height: 1.25;
+      transition: color 0.2s ease;
+    }
+
+    .back-home:hover .back-home-line {
+      color: #005f5f;
+    }
+
+    .footer-line {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #666;
+      margin-top: 12px;
+      text-transform: uppercase;
+    }
+
+    /* -------- RESPONSIVE -------- */
+    @media (max-width: 600px) {
+      .study-title {
+        font-size: 28px;
+      }
+      .back-home-line {
+        font-size: 22px;
+        letter-spacing: 2px;
+      }
+    }
+
+    /* -------- ACCESSIBILITY -------- */
+    a:focus-visible,
+    .share-btn:focus-visible {
+      outline: 2px solid #111;
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .top-nav a,
+      .share-btn,
+      .back-home-line {
+        transition: none;
+      }
+      .share-btn:hover {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ====== TOP NAV ====== -->
+    <nav class="top-nav" aria-label="Breadcrumb">
+      <a href="index.html#studies">← All studies</a>
+      <span>Shlok Mane</span>
+    </nav>
+
+    <!-- ====== STUDY HEADER (filled automatically from the .md file) ====== -->
+    <header class="study-header">
+      <div class="study-kicker" id="studyKicker">Channel Study</div>
+      <h1 class="study-title" id="studyTitle">Loading study…</h1>
+      <div class="study-meta" id="studyMeta"></div>
+    </header>
+
+    <!-- ====== STUDY CONTENT (rendered from Markdown) ====== -->
+    <main>
+      <article class="study-body" id="studyContent" aria-live="polite">
+        <p>Loading…</p>
+        <noscript>
+          <p>This page renders studies from Markdown files — please enable JavaScript.</p>
+        </noscript>
+      </article>
+    </main>
+
+    <!-- ====== SHARE THIS STUDY ====== -->
+    <section class="study-actions" aria-label="Share this study">
+      <button class="share-btn" id="shareBtn" type="button">Copy link to this study</button>
+      <div class="share-hint" id="shareHint">This study has its own link — share it anywhere and it opens exactly this study.</div>
+    </section>
+
+    <!-- ====== BACK TO HOME ====== -->
+    <a class="back-home" href="index.html">
+      <span class="back-home-line">Back to Home</span>
+      <span class="footer-line">All studies · Portfolio of Shlok Mane</span>
+    </a>
+
+  </div>
+
+  <!-- Markdown renderer (CDN). If it fails to load, the raw Markdown is shown instead. -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var kickerEl = document.getElementById('studyKicker');
+      var titleEl = document.getElementById('studyTitle');
+      var metaEl = document.getElementById('studyMeta');
+      var contentEl = document.getElementById('studyContent');
+
+      function esc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+
+      // Minimal "---" front-matter parser for the .md study files
+      function splitFrontMatter(text) {
+        var match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text);
+        if (!match) { return { meta: {}, body: text }; }
+        var meta = {};
+        match[1].split(/\r?\n/).forEach(function (line) {
+          var pos = line.indexOf(':');
+          if (pos > 0) {
+            var key = line.slice(0, pos).trim().toLowerCase();
+            var value = line.slice(pos + 1).trim().replace(/^["']|["']$/g, '');
+            meta[key] = value;
+          }
+        });
+        return { meta: meta, body: text.slice(match[0].length).replace(/^\s+/, '') };
+      }
+
+      // study.html#channel-1  (also accepts study.html?study=channel-1)
+      function currentSlug() {
+        var raw = location.hash.slice(1) ||
+                  new URLSearchParams(location.search).get('study') || '';
+        return decodeURIComponent(raw).toLowerCase().replace(/[^a-z0-9-]/g, '');
+      }
+
+      function setMetaTag(selector, value) {
+        var el = document.querySelector(selector);
+        if (el && value) { el.setAttribute('content', value); }
+      }
+
+      function showMessage(html) {
+        contentEl.innerHTML = html;
+      }
+
+      function resetHeader(kicker, title) {
+        kickerEl.textContent = kicker;
+        titleEl.textContent = title;
+        metaEl.textContent = '';
+      }
+
+      // The new clean-URL page for a study (studies/<slug>/) is built by the site
+      // build. If it exists, upgrade old "#"-style links to it automatically.
+      function forwardIfBuilt(slug, otherwise) {
+        fetch('studies/' + slug + '/', { method: 'HEAD' })
+          .then(function (res) {
+            if (res.ok) {
+              window.location.replace('studies/' + slug + '/');
+            } else {
+              otherwise();
+            }
+          })
+          .catch(otherwise);
+      }
+
+      function loadStudy() {
+        var slug = currentSlug();
+
+        if (!slug) {
+          resetHeader('Channel Study', 'No study selected');
+          showMessage(
+            '<p>Pick a study from the list on the home page.</p>' +
+            '<p><a href="index.html#studies">← Go to all studies</a></p>'
+          );
+          return;
+        }
+
+        // Clean page exists? Go there. Not built (or opened from disk)? Render here.
+        forwardIfBuilt(slug, function () { renderMarkdown(slug); });
+      }
+
+      function renderMarkdown(slug) {
+        fetch('studies/' + slug + '.md')
+          .then(function (res) {
+            if (!res.ok) { throw new Error('http ' + res.status); }
+            return res.text();
+          })
+          .then(function (text) {
+            var parts = splitFrontMatter(text);
+            var meta = parts.meta;
+            var body = parts.body;
+
+            kickerEl.textContent = meta.kicker || 'Channel Study';
+            titleEl.textContent = meta.name || slug;
+            metaEl.textContent = meta.meta || '';
+
+            document.title = (meta.name || slug) + ' — Channel Study | Shlok Mane';
+            setMetaTag('meta[name="description"]',
+              'A hand-written study of ' + (meta.name || slug) +
+              ' — branding, programming and on-screen presentation. Written by Shlok Mane.');
+            setMetaTag('meta[property="og:title"]', 'Channel Study — ' + (meta.name || slug));
+            setMetaTag('meta[property="og:description"]',
+              'Hand-written observations on branding, programming and on-screen design. Written by Shlok Mane.');
+
+            if (window.marked && typeof window.marked.parse === 'function') {
+              contentEl.innerHTML = window.marked.parse(body);
+            } else {
+              // Renderer unavailable (CDN blocked) — show the raw Markdown, still readable
+              contentEl.innerHTML = '<pre class="md-fallback">' + esc(body) + '</pre>';
+            }
+          })
+          .catch(function () {
+            resetHeader('Channel Study', 'Study not found');
+            if (location.protocol === 'file:') {
+              showMessage(
+                '<p>This page reads your <strong>.md</strong> study files, which browsers block ' +
+                'when opened directly from disk.</p>' +
+                '<p>Preview with a local server (VS Code Live Server, or run <strong>npx serve</strong>) ' +
+                '— or view the site once it is hosted. Then this exact link works anywhere.</p>' +
+                '<p><a href="index.html#studies">← Go to all studies</a></p>'
+              );
+            } else {
+              showMessage(
+                '<p>This study could not be loaded — the file <strong>studies/' + esc(slug) +
+                '.md</strong> may not exist yet, or the link is out of date.</p>' +
+                '<p><a href="index.html#studies">← Go to all studies</a></p>'
+              );
+            }
+          });
+      }
+
+      window.addEventListener('hashchange', loadStudy);
+      loadStudy();
+
+      // ===== Copy-link button (shares this study's own URL) =====
+      var btn = document.getElementById('shareBtn');
+      var hint = document.getElementById('shareHint');
+      if (!btn) { return; }
+
+      var defaultHint = hint ? hint.textContent : '';
+      var idleLabel = btn.textContent;
+
+      function showCopied() {
+        btn.textContent = 'Link copied ✓';
+        btn.classList.add('copied');
+        if (hint) { hint.textContent = 'Paste it anywhere — WhatsApp, LinkedIn, email — it opens this exact study.'; }
+        window.setTimeout(function () {
+          btn.textContent = idleLabel;
+          btn.classList.remove('copied');
+          if (hint) { hint.textContent = defaultHint; }
+        }, 2400);
+      }
+
+      function showFailed() {
+        if (hint) { hint.textContent = 'Auto-copy was blocked — copy the link from the address bar instead.'; }
+        window.setTimeout(function () {
+          if (hint) { hint.textContent = defaultHint; }
+        }, 3600);
+      }
+
+      // Fallback for browsers where the async Clipboard API is unavailable or blocked
+      function legacyCopy() {
+        var input = document.createElement('input');
+        input.value = window.location.href;
+        input.setAttribute('readonly', '');
+        input.style.position = 'fixed';
+        input.style.opacity = '0';
+        document.body.appendChild(input);
+        input.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+        document.body.removeChild(input);
+        return ok;
+      }
+
+      btn.addEventListener('click', function () {
+        if (btn.classList.contains('copied')) { return; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(window.location.href).then(showCopied, function () {
+            if (legacyCopy()) { showCopied(); } else { showFailed(); }
+          });
+        } else if (legacyCopy()) {
+          showCopied();
+        } else {
+          showFailed();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

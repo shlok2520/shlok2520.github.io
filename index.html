@@ -1,9 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shlok Mane – Still Learning</title>
+
+  <!-- SEO / sharing metadata -->
+  <meta name="description"
+    content="Shlok Mane — front-end developer. 15+ full-scale platforms delivered, personal AI apps, and hand-written TV channel studies. Still learning." />
+  <meta name="author" content="Shlok Mane" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="color-scheme" content="light" />
+  <meta property="og:title" content="Shlok Mane – Still Learning" />
+  <meta property="og:description"
+    content="Front-end developer. 15+ platforms shipped, 3 personal AI apps, hand-written TV channel studies, and a lifelong student mindset." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+
+  <!-- Inline SVG favicon (no extra file needed) -->
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2064%2064%27%3E%3Crect%20width=%2764%27%20height=%2764%27%20rx=%2714%27%20fill=%27%23111%27/%3E%3Ctext%20x=%2732%27%20y=%2732%27%20dy=%27.35em%27%20text-anchor=%27middle%27%20font-family=%27Courier%20New,%20monospace%27%20font-size=%2730%27%20font-weight=%27700%27%20fill=%27%23fff%27%3ESM%3C/text%3E%3C/svg%3E" />
+
+  <!--
+    OPTIMIZATION NOTES (v1 changes)
+    1. Removed the custom LERP "smooth scroll" system: it hijacked wheel/touch events,
+       broke keyboard scrolling, pinch-zoom and pull-to-refresh, and burned CPU in an
+       always-running rAF loop. Native scrolling is used instead.
+    2. Quote card: keyboard accessible (Enter/Space), aria-expanded state, passive listeners,
+       reacts to resize and sets its correct state on load.
+    3. Semantics: real h1/h2 headings, <main>/<footer> landmarks, timeline table -> list.
+    4. Accessibility: focus-visible outlines, prefers-reduced-motion support, contrast fix,
+       decorative characters hidden from screen readers.
+    5. Robust images: inline SVG placeholders if files are missing, lazy loading below the fold.
+    6. Security: rel="noopener noreferrer" on the external link.
+    7. Fixed attribution year: Apollo 13 (1995), not 1993.
+    8. SEO: meta description, Open Graph/Twitter tags, inline SVG favicon.
+
+    v2: MULTI-PAGE SITE — home (this file) + study pages.
+    v3: STUDIES ARE NOW MARKDOWN-DRIVEN (no HTML editing to add or edit a study):
+    - You write studies as plain Markdown: studies/channel-1.md, channel-2.md, ...
+    - studies/_index.json sets the order of the cards in the TV CHANNEL STUDIES section.
+    - studies/_template.md = copy it to add a new TV or streaming study.
+    v4: CLEAN SHAREABLE LINKS (no "#" in the URL):
+    - _build/build-studies.cjs turns each studies/<slug>.md into a real page at
+      dist/studies/<slug>/ — so a study's link is yoursite.com/studies/channel-1/
+      (the "dist" folder is what gets hosted).
+    - The build also bakes the study cards into this page automatically; the loader
+      at the bottom of this file is only a fallback for copies that were never built.
+    - .github/workflows/deploy.yml runs the build and deploys dist/ on every push —
+      you still only ever edit the .md files. One-time GitHub setting:
+      Settings → Pages → Source: "GitHub Actions" (see STUDIES-WORKFLOW.md).
+    - study.html is kept only as a legacy fallback: old study.html#channel-1 links
+      auto-forward to the new clean URL.
+  -->
+
   <style>
     * {
       margin: 0;
@@ -18,8 +69,6 @@
       justify-content: center;
       font-family: 'Courier New', Courier, monospace;
       color: #111111;
-      overflow-y: auto; 
-      height: auto;
     }
 
     .container {
@@ -54,7 +103,6 @@
     }
 
     .header-text .name {
-      font-family: 'Courier New', Courier, monospace;
       font-size: 36px;
       font-weight: 700;
       letter-spacing: -1px;
@@ -65,7 +113,6 @@
     }
 
     .header-text .bio {
-      font-family: 'Courier New', Courier, monospace;
       font-size: 15px;
       line-height: 1.5;
       color: #1a1a1a;
@@ -79,7 +126,6 @@
     .contact-links {
       margin-top: 12px;
       font-size: 14px;
-      font-family: 'Courier New', Courier, monospace;
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
@@ -106,7 +152,6 @@
     }
 
     .section-heading {
-      font-family: 'Courier New', Courier, monospace;
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 1px;
@@ -117,39 +162,42 @@
       margin-bottom: 14px;
     }
 
-    /* -------- TABLE (CURRENT WORK) -------- */
-    .stats-table {
-      width: 100%;
-      border-collapse: collapse;
+    /* -------- TIMELINE (CURRENT WORK) -------- */
+    .stats-list {
+      list-style: none;
       font-size: 14px;
     }
 
-    .stats-table tr {
+    .stats-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 12px 0;
       border-bottom: 1px solid #ddd;
     }
 
-    .stats-table tr:last-child {
+    .stats-list li:last-child {
       border-bottom: none;
     }
 
-    .stats-table td {
-      padding: 12px 0;
-      vertical-align: middle;
-      font-family: 'Courier New', Courier, monospace;
-    }
-
-    .stats-table .stat-label {
-      font-weight: 400;
+    .stats-list .stat-label {
+      flex: 1;
       color: #111;
-      width: 70%;
     }
 
-    .stats-table .stat-value {
+    .stats-list .stat-note {
+      font-size: 13px;
+      color: #005f5f;
+      font-weight: 600;
+    }
+
+    .stats-list .stat-value {
       font-weight: 600;
       text-align: right;
-      width: 30%;
       font-size: 13px;
       color: #111;
+      white-space: nowrap;
     }
 
     /* -------- AI PROJECTS BLOCK -------- */
@@ -177,6 +225,100 @@
       font-style: italic;
     }
 
+    /* -------- TV CHANNEL STUDIES -------- */
+    .studies-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .study-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 2px;
+      border-bottom: 1px solid #eee;
+      text-decoration: none;
+      color: #111;
+      transition: background 0.2s ease;
+    }
+
+    .study-card:hover {
+      background: #fafafa;
+    }
+
+    .study-num {
+      flex-shrink: 0;
+      min-width: 42px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #c1c1c1;
+      letter-spacing: 1px;
+    }
+
+    .study-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .study-name {
+      display: block;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .study-tag {
+      display: block;
+      font-size: 12px;
+      color: #666;
+      margin-top: 3px;
+      letter-spacing: 0.3px;
+    }
+
+    .study-status {
+      flex-shrink: 0;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #666;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      padding: 4px 10px;
+    }
+
+    /* Add class "published" (and change the text) once a study is finished */
+    .study-status.published {
+      color: #005f5f;
+      border-color: #005f5f;
+    }
+
+    .study-arrow {
+      flex-shrink: 0;
+      font-size: 18px;
+      color: #999;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .study-card:hover .study-arrow {
+      transform: translateX(4px);
+      color: #111;
+    }
+
+    .studies-soon {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #005f5f;
+      font-weight: 600;
+    }
+
+    .studies-note {
+      padding: 14px 0 4px;
+      font-size: 13px;
+      font-style: italic;
+      color: #666;
+      line-height: 1.7;
+    }
+
     /* -------- SKILLS GRID (NOW EXPLORING) -------- */
     .skills-grid {
       display: grid;
@@ -191,9 +333,7 @@
       gap: 12px;
       padding: 14px 0;
       border-bottom: 1px solid #eee;
-      font-family: 'Courier New', Courier, monospace;
       font-size: 15px;
-      font-weight: 400;
       color: #111;
     }
 
@@ -211,7 +351,6 @@
     }
 
     .thankyou-line {
-      font-family: 'Courier New', Courier, monospace;
       font-size: 34px;
       font-weight: 700;
       letter-spacing: 4px;
@@ -221,10 +360,9 @@
     }
 
     .footer-line {
-      font-family: 'Courier New', Courier, monospace;
       font-size: 12px;
       letter-spacing: 1.5px;
-      color: #777;
+      color: #666;
       margin-top: 14px;
       border-top: 1px solid #ddd;
       padding-top: 14px;
@@ -238,20 +376,23 @@
         align-items: center;
         text-align: center;
       }
+
       .skills-grid {
         grid-template-columns: 1fr;
         gap: 0;
       }
+
       .thankyou-line {
         font-size: 30px;
       }
+
       .avatar {
         width: 100px;
         height: 100px;
       }
     }
 
-    /* ====== HIDDEN QUOTE CARD ====== */
+    /* ====== QUOTE CARD ====== */
     .quote-card {
       position: fixed;
       bottom: 30px;
@@ -260,7 +401,7 @@
       display: flex;
       align-items: center;
       gap: 0;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
       background: #f7f7f7;
       border-radius: 12px 0 0 12px;
       border: 1px solid #ddd;
@@ -274,11 +415,12 @@
 
     .quote-card:hover {
       opacity: 1;
-      box-shadow: 0 6px 28px rgba(0,0,0,0.18);
+      box-shadow: 0 6px 28px rgba(0, 0, 0, 0.18);
     }
 
     /* Visible when near bottom or opened */
-    .quote-card.at-bottom, .quote-card.open {
+    .quote-card.at-bottom,
+    .quote-card.open {
       transform: translateX(0);
     }
 
@@ -298,7 +440,8 @@
       font-family: Georgia, serif;
     }
 
-    .quote-card.open .card-handle, .quote-card.at-bottom .card-handle {
+    .quote-card.open .card-handle,
+    .quote-card.at-bottom .card-handle {
       background: #FDDA0D;
     }
 
@@ -309,11 +452,21 @@
     }
 
     @keyframes pulse-handle {
-      0%, 100% { opacity: 0.5; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.12); }
+
+      0%,
+      100% {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.12);
+      }
     }
 
-    .quote-card.open .card-handle::before, .quote-card.at-bottom .card-handle::before {
+    .quote-card.open .card-handle::before,
+    .quote-card.at-bottom .card-handle::before {
       animation: none;
       opacity: 1;
       transform: scale(1);
@@ -323,7 +476,6 @@
       padding: 14px 20px 14px 14px;
       white-space: nowrap;
       overflow: hidden;
-      font-family: 'Courier New', Courier, monospace;
     }
 
     .card-content p {
@@ -349,9 +501,11 @@
         bottom: 16px;
         max-width: 280px;
       }
+
       .card-content p {
         font-size: 13px;
       }
+
       .card-handle {
         width: 24px;
         height: 50px;
@@ -359,283 +513,489 @@
       }
     }
 
-    /* ====== NEW SECTION: APP ICONS ====== */
+    /* ====== APP ICONS ====== */
     .intro-text {
-      font-family: 'Courier New', Courier, monospace;
       font-size: 14px;
       line-height: 1.6;
       color: #333;
       margin-bottom: 18px;
       font-style: italic;
     }
+
     .icon-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
+
     .icon-card {
       background: #f9f9f9;
       border: 1px solid #eee;
       border-radius: 12px;
-      padding: 16px; 
+      padding: 16px;
       display: flex;
       justify-content: center;
       align-items: center;
       aspect-ratio: 1 / 1;
       transition: box-shadow 0.3s ease, transform 0.2s ease;
     }
+
     .icon-card:hover {
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
       transform: scale(1.02);
     }
+
     .icon-card img {
-      max-width: 65%; 
+      max-width: 65%;
       height: auto;
       border-radius: 16px;
       object-fit: contain;
     }
+
     /* Mobile tweak for icons */
     @media (max-width: 500px) {
       .icon-grid {
         gap: 10px;
       }
+
       .icon-card {
         padding: 12px;
       }
+
       .icon-card img {
         max-width: 60%;
       }
     }
+
+    /* Mobile tweak for study cards */
+    @media (max-width: 500px) {
+      .study-card {
+        gap: 12px;
+      }
+
+      .study-num {
+        min-width: 30px;
+        font-size: 18px;
+      }
+
+      .study-arrow {
+        display: none;
+      }
+    }
+
+    /* ====== ACCESSIBILITY ====== */
+    a:focus-visible,
+    .quote-card:focus-visible {
+      outline: 2px solid #111;
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .contact-links a,
+      .card-handle,
+      .icon-card,
+      .quote-card,
+      .study-card,
+      .study-arrow {
+        transition: none;
+      }
+
+      .card-handle::before {
+        animation: none;
+        opacity: 1;
+      }
+
+      .icon-card:hover {
+        transform: none;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
 
     <!-- ====== HEADER ====== -->
     <header class="header">
-      <img src="shlok-photo.jpg" alt="Shlok Mane" class="avatar">
+      <!-- Swap src for your real photo; a clean "SM" placeholder shows automatically if the file is missing -->
+      <img src="shlok-photo.jpg" alt="Shlok Mane" class="avatar" width="120" height="120" decoding="async"
+        onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20240%20240%27%3E%3Crect%20width=%27240%27%20height=%27240%27%20fill=%27%23f0f0f0%27/%3E%3Ctext%20x=%27120%27%20y=%27120%27%20dy=%27.35em%27%20text-anchor=%27middle%27%20font-family=%27Courier%20New,%20monospace%27%20font-size=%2772%27%20font-weight=%27700%27%20fill=%27%23222%27%3ESM%3C/text%3E%3C/svg%3E'" />
       <div class="header-text">
-        <div class="name">SHLOK MANE</div>
-        <div class="bio">
-          I am a front-end developer continuously <strong>learning and refining</strong> my craft. While I've successfully delivered 15+ full-scale platforms, I approach every project with the humility of a student, always eager to adapt to new tools and techniques.
-        </div>
+        <h1 class="name">SHLOK MANE</h1>
+        <p class="bio">
+          I am a front-end developer continuously <strong>learning and refining</strong> my craft. While I've
+          successfully delivered 15+ full-scale platforms, I approach every project with the humility of a student,
+          always eager to adapt to new tools and techniques.
+        </p>
         <div class="contact-links">
           <a href="mailto:shlokmane4@gmail.com">shlokmane4@gmail.com</a>
-          <span class="divider">|</span>
-          <a href="https://www.linkedin.com/in/shlok-mane-543188221/" target="_blank">LinkedIn</a>
+          <span class="divider" aria-hidden="true">|</span>
+          <a href="https://www.linkedin.com/in/shlok-mane-543188221/" target="_blank"
+            rel="noopener noreferrer">LinkedIn</a>
         </div>
       </div>
     </header>
 
-    <!-- ====== CURRENT WORK ====== -->
-    <section class="section">
-      <div class="section-heading">I CURRENTLY WORK AT</div>
-      <table class="stats-table">
-        <tr>
-          <td class="stat-label">
-            Freelance Developer<br>
-            <span style="font-size: 13px; color: #005f5f; font-weight: 600;">✦ Built 3 apps for personal use using free AI tools</span>
-          </td>
-          <td class="stat-value">2024 – Present</td>
-        </tr>
-        <tr>
-          <td class="stat-label">iDigitize Infotech LLP · Front-End Developer</td>
-          <td class="stat-value">2022 – 2024</td>
-        </tr>
-        <tr>
-          <td class="stat-label">Education: MSc IT · Valia College</td>
-          <td class="stat-value">2020 – 2022</td>
-        </tr>
-      </table>
-    </section>
+    <main>
 
-    <!-- ====== PERSONAL AI PROJECTS ====== -->
-    <section class="section">
-      <div class="section-heading">PERSONAL AI PROJECTS</div>
-      <div class="ai-grid">
-        <div class="ai-item">
-          <div class="ai-item-title">✦ Smart Bookmark & URL Visualizer</div>
-          <div class="ai-item-desc">Android app built with Jetpack Compose & Room DB that captures websites into beautiful media cards with auto-screenshots and ad-blocking.</div>
+      <!-- ====== TV CHANNEL STUDIES (cards auto-generated from studies/*.md — never edit this list by hand) ====== -->
+      <section class="section" id="studies">
+        <h2 class="section-heading">TV CHANNEL STUDIES</h2>
+        <p class="intro-text">
+          Personal, hand-written studies of television channels — how they brand themselves,
+          program their schedules and present everything on screen. Every word is written by me,
+          study by study; nothing here is AI-generated.
+        </p>
+        <!--
+          TO ADD A STUDY (TV or streaming) — no HTML editing needed:
+          1. Copy studies/_template.md to studies/channel-5.md (or streaming-netflix.md)
+             and write it in plain Markdown.
+          2. Add "channel-5" to the list in studies/_index.json.
+          3. Done — the cards below and the study page update automatically.
+          Full workflow: see STUDIES-WORKFLOW.md in this folder.
+        -->
+        <div class="studies-list" id="studiesList" aria-live="polite">
+          <!--studies-cards:start-->
+          <div class="studies-note" id="studiesNote">Loading studies…</div>
+          <!--studies-cards:end-->
         </div>
-        <div class="ai-item">
-          <div class="ai-item-title">✦ Offline-First Sync Journaling Suite</div>
-          <div class="ai-item-desc">Cross-platform mobile app (React Native, Expo, Supabase) with offline-first data sync and smooth low-latency journaling.</div>
-        </div>
-        <div class="ai-item">
-          <div class="ai-item-title">✦ Distraction-Free Desktop Writing Engine</div>
-          <div class="ai-item-desc">Electron-based editor with Markdown support, file trees, native asset manager and custom PDF compilation.</div>
-        </div>
-      </div>
-    </section>
+        <div class="studies-soon">✦ Streaming channel studies — coming next</div>
+      </section>
 
-    <!-- ====== CREATIVE SIDE PROJECTS ====== -->
-    <section class="section">
-      <div class="section-heading">CREATIVE SIDE PROJECTS</div>
-      <div class="ai-grid">
-        <div class="ai-item">
-          <div class="ai-item-title">✦ YouTube Videos & Reels</div>
-          <div class="ai-item-desc">
-            Produced 4 full-length YouTube videos and edited multiple Reels/Shorts for friends. 
-            None of it went viral (unfortunately!), but it gave me a deep appreciation for storytelling, 
-            pacing, and the sheer effort behind a 60-second clip. It's a constant exercise in humility 
-            and creativity—proving that trying and learning matter far more than instant success.
+      <!-- ====== CURRENT WORK ====== -->
+      <section class="section">
+        <h2 class="section-heading">I CURRENTLY WORK AT</h2>
+        <ul class="stats-list">
+          <li>
+            <div class="stat-label">
+              Freelance Developer<br>
+              <span class="stat-note">✦ Built 3 apps for personal use using free AI tools</span>
+            </div>
+            <div class="stat-value">2024 – Present</div>
+          </li>
+          <li>
+            <div class="stat-label">iDigitize Infotech LLP · Front-End Developer</div>
+            <div class="stat-value">2022 – 2024</div>
+          </li>
+          <li>
+            <div class="stat-label">Education: MSc IT · Valia College</div>
+            <div class="stat-value">2020 – 2022</div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ====== PERSONAL AI PROJECTS ====== -->
+      <section class="section">
+        <h2 class="section-heading">PERSONAL AI PROJECTS</h2>
+        <div class="ai-grid">
+          <div class="ai-item">
+            <div class="ai-item-title">✦ Smart Bookmark &amp; URL Visualizer</div>
+            <div class="ai-item-desc">Android app built with Jetpack Compose &amp; Room DB that captures websites into
+              beautiful media cards with auto-screenshots and ad-blocking.</div>
+          </div>
+          <div class="ai-item">
+            <div class="ai-item-title">✦ Offline-First Sync Journaling Suite</div>
+            <div class="ai-item-desc">Cross-platform mobile app (React Native, Expo, Supabase) with offline-first data
+              sync and smooth low-latency journaling.</div>
+          </div>
+          <div class="ai-item">
+            <div class="ai-item-title">✦ Distraction-Free Desktop Writing Engine</div>
+            <div class="ai-item-desc">Electron-based editor with Markdown support, file trees, native asset manager and
+              custom PDF compilation.</div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ====== APP ICONS ====== -->
-    <section class="section">
-      <div class="section-heading">APP ICONS</div>
-      <div class="intro-text">
-       Sure, they aren't shiny or classy masterpieces, but at least they were made by a human, instead of burning tokens.
-      </div>
-      <div class="icon-grid">
-        <!-- Replace the src below with your actual app icon images -->
-        <div class="icon-card">
-          <img src="Desktop Writer.png" alt="Desktop Writer">
+      <!-- ====== CREATIVE SIDE PROJECTS ====== -->
+      <section class="section">
+        <h2 class="section-heading">CREATIVE SIDE PROJECTS</h2>
+        <div class="ai-grid">
+          <div class="ai-item">
+            <div class="ai-item-title">✦ YouTube Videos &amp; Reels</div>
+            <div class="ai-item-desc">
+              Produced 4 full-length YouTube videos and edited multiple Reels/Shorts for friends.
+              None of it went viral (unfortunately!), but it gave me a deep appreciation for storytelling,
+              pacing, and the sheer effort behind a 60-second clip. It's a constant exercise in humility
+              and creativity—proving that trying and learning matter far more than instant success.
+            </div>
+          </div>
         </div>
-        <div class="icon-card">
-          <img src="Mobile Writing.png" alt="Mobile Writing">
-        </div>
-        <div class="icon-card">
-          <img src="News.png" alt="News">
-        </div>
-        <div class="icon-card">
-          <img src="Video Camera.png" alt="Video-Camera">
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ====== CURRENTLY EXPLORING ====== -->
-    <section class="section">
-      <div class="section-heading">CURRENTLY EXPLORING</div>
-      <div class="skills-grid">
-        <div class="skill-item"><span class="bullet">●</span> React.js</div>
-        <div class="skill-item"><span class="bullet">●</span> Tailwind CSS</div>
-        <div class="skill-item"><span class="bullet">●</span> JavaScript (ES6+)</div>
-        <div class="skill-item"><span class="bullet">●</span> WordPress (Divi)</div>
-        <div class="skill-item"><span class="bullet">●</span> OpenCart</div>
-        <div class="skill-item"><span class="bullet">●</span> WooCommerce</div>
-        <div class="skill-item"><span class="bullet">●</span> Supabase</div>
-        <div class="skill-item"><span class="bullet">●</span> TanStack Query</div>
-        <div class="skill-item"><span class="bullet">●</span> React Hook Form</div>
-        <div class="skill-item"><span class="bullet">●</span> Expo / React Native</div>
-        <div class="skill-item"><span class="bullet">●</span> Photoshop</div>
-        <div class="skill-item"><span class="bullet">●</span> Illustrator</div>
-        <div class="skill-item"><span class="bullet">●</span> DaVinci Resolve</div>
-      </div>
-    </section>
+      <!-- ====== APP ICONS ====== -->
+      <section class="section">
+        <h2 class="section-heading">APP ICONS</h2>
+        <p class="intro-text">
+          I know these logos are not the greatest or the most visually stunning. They're the result of a developer
+          trying his hand at design — born out of multiple drafts and late nights. I'm sharing them because progress,
+          not perfection, is what matters.
+        </p>
+        <div class="icon-grid">
+          <!-- Replace the src attributes below with your actual app icon images.
+               If a file is missing, a clean placeholder icon is shown instead of a broken image. -->
+          <div class="icon-card">
+            <img src="icon-placeholder-1.png" alt="Smart Bookmark Icon" loading="lazy" decoding="async"
+              onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2096%2096%27%3E%3Crect%20width=%2796%27%20height=%2796%27%20rx=%2720%27%20fill=%27%23111%27/%3E%3Cpath%20d=%27M48%2020L54%2042L76%2048L54%2054L48%2076L42%2054L20%2048L42%2042Z%27%20fill=%27%23fff%27/%3E%3C/svg%3E'" />
+          </div>
+          <div class="icon-card">
+            <img src="icon-placeholder-2.png" alt="Sync Journaling Icon" loading="lazy" decoding="async"
+              onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2096%2096%27%3E%3Crect%20width=%2796%27%20height=%2796%27%20rx=%2720%27%20fill=%27%23111%27/%3E%3Cpath%20d=%27M48%2020L54%2042L76%2048L54%2054L48%2076L42%2054L20%2048L42%2042Z%27%20fill=%27%23fff%27/%3E%3C/svg%3E'" />
+          </div>
+          <div class="icon-card">
+            <img src="icon-placeholder-3.png" alt="Desktop Writing Engine Icon" loading="lazy" decoding="async"
+              onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2096%2096%27%3E%3Crect%20width=%2796%27%20height=%2796%27%20rx=%2720%27%20fill=%27%23111%27/%3E%3Cpath%20d=%27M48%2020L54%2042L76%2048L54%2054L48%2076L42%2054L20%2048L42%2042Z%27%20fill=%27%23fff%27/%3E%3C/svg%3E'" />
+          </div>
+          <div class="icon-card">
+            <img src="icon-placeholder-4.png" alt="YouTube / Reels Icon" loading="lazy" decoding="async"
+              onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2096%2096%27%3E%3Crect%20width=%2796%27%20height=%2796%27%20rx=%2720%27%20fill=%27%23111%27/%3E%3Cpath%20d=%27M48%2020L54%2042L76%2048L54%2054L48%2076L42%2054L20%2048L42%2042Z%27%20fill=%27%23fff%27/%3E%3C/svg%3E'" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== CURRENTLY EXPLORING ====== -->
+      <section class="section">
+        <h2 class="section-heading">CURRENTLY EXPLORING</h2>
+        <div class="skills-grid">
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> React.js</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> Tailwind CSS</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> JavaScript (ES6+)</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> WordPress (Divi)</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> OpenCart</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> WooCommerce</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> Supabase</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> TanStack Query</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> React Hook Form</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> Expo / React Native</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> Photoshop</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> Illustrator</div>
+          <div class="skill-item"><span class="bullet" aria-hidden="true">●</span> DaVinci Resolve</div>
+        </div>
+      </section>
+
+    </main>
 
     <!-- ====== FOOTER ====== -->
-    <section class="thankyou-section">
+    <footer class="thankyou-section">
       <div class="thankyou-line">THANK YOU</div>
       <div class="footer-line">STILL LEARNING</div>
-    </section>
+    </footer>
 
   </div>
 
-  <!-- ====== HIDDEN QUOTE CARD ====== -->
-  <div class="quote-card" id="quoteCard">
-    <div class="card-handle"></div>
+  <!-- ====== QUOTE CARD (peeks in near the page bottom; click, Enter or Space to toggle) ====== -->
+  <div class="quote-card" id="quoteCard" role="button" tabindex="0" aria-expanded="false"
+    aria-label="Toggle movie quote">
+    <div class="card-handle" aria-hidden="true"></div>
     <div class="card-content">
-      <p>"Houston, we have a problem"</p>
-      <span>— Apollo 13 (1993)</span>
+      <p>“Houston, we have a problem”</p>
+      <span>— Apollo 13 (1995)</span>
     </div>
   </div>
 
   <script>
-    const card = document.getElementById('quoteCard');
-    let lastScrollY = window.scrollY;
+    // NOTE: The previous custom "smooth scroll" (LERP) system was removed.
+    // It hijacked wheel/touch events, which broke keyboard scrolling, pinch-zoom,
+    // pull-to-refresh and accessibility, and it burned CPU in an always-running
+    // requestAnimationFrame loop. Native scrolling is smooth and reliable on both
+    // desktop and mobile, so no JavaScript is needed for scrolling anymore.
+    (function () {
+      'use strict';
 
-    function handleScroll() {
-      const currentScrollY = window.scrollY;
-      const scrollPosition = currentScrollY + window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const threshold = documentHeight - 200;
+      // ===== Quote card: peek near the bottom, toggle with click / Enter / Space =====
+      var card = document.getElementById('quoteCard');
 
-      // If scrolling up while the card is open -> close it
-      if (currentScrollY < lastScrollY && card.classList.contains('open')) {
-        card.classList.remove('open', 'at-bottom');
-      }
+      if (card) {
+        var lastScrollY = window.scrollY;
 
-      // If near bottom and card is NOT open -> make it peek
-      if (scrollPosition >= threshold && !card.classList.contains('open')) {
-        card.classList.add('at-bottom');
-      }
-
-      // If far from bottom and card is NOT open -> hide fully (just peek trigger)
-      if (scrollPosition < threshold && !card.classList.contains('open')) {
-        card.classList.remove('at-bottom');
-      }
-
-      lastScrollY = currentScrollY;
-    }
-
-    window.addEventListener('scroll', handleScroll);
-
-    card.addEventListener('click', function() {
-      this.classList.toggle('open');
-
-      if (!this.classList.contains('open')) {
-        // After closing, re-evaluate position to decide if it should peek
-        const scrollPosition = window.scrollY + window.innerHeight;
-        const documentHeight = document.documentElement.scrollHeight;
-        const threshold = documentHeight - 200;
-
-        if (scrollPosition >= threshold) {
-          this.classList.add('at-bottom');
-        } else {
-          this.classList.remove('at-bottom');
+        function nearBottom() {
+          return window.scrollY + window.innerHeight >=
+            document.documentElement.scrollHeight - 200;
         }
-      } else {
-        this.classList.add('at-bottom');
+
+        function setOpen(open) {
+          card.classList.toggle('open', open);
+          card.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        function update() {
+          var currentScrollY = window.scrollY;
+
+          // Scrolling up while the card is open -> close it
+          if (currentScrollY < lastScrollY && card.classList.contains('open')) {
+            setOpen(false);
+          }
+
+          // Peek only when near the bottom and not manually open
+          if (!card.classList.contains('open')) {
+            card.classList.toggle('at-bottom', nearBottom());
+          }
+
+          lastScrollY = currentScrollY;
+        }
+
+        function toggleCard() {
+          var willOpen = !card.classList.contains('open');
+          setOpen(willOpen);
+
+          if (willOpen) {
+            card.classList.add('at-bottom');
+          } else {
+            // After closing, peek again only if we are still near the bottom
+            card.classList.toggle('at-bottom', nearBottom());
+          }
+        }
+
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update);
+        update(); // set the correct initial state on load
+
+        card.addEventListener('click', toggleCard);
+
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            toggleCard();
+          }
+        });
       }
-    });
+    })();
 
+    // ===== Studies list =====
+    // Normally the build script (_build/build-studies.cjs) bakes these cards straight
+    // into the HTML. This loader is the fallback for copies that were never built:
+    // it reads studies/_index.json (order) + each .md file's header (card data).
+    (function () {
+      'use strict';
 
-    // ==========================================
-    // ULTRA SMOOTH SCROLL (LERP) - DESKTOP & MOBILE
-    // ==========================================
-    let targetY = window.scrollY;
-    let currentY = window.scrollY;
-    const ease = 0.08; // Lower = smoother and slower. 0.06-0.09 is ideal.
+      var list = document.getElementById('studiesList');
+      if (!list) { return; }
+      // Cards already baked in by the build — nothing left to do.
+      if (list.querySelector('.study-card')) { return; }
+      var note = document.getElementById('studiesNote');
 
-    function smoothScrollLoop() {
-      currentY += (targetY - currentY) * ease;
-      
-      if (Math.abs(targetY - currentY) < 0.1) {
-        currentY = targetY;
+      // Minimal "---" front-matter parser for the .md study files
+      function parseFrontMatter(text) {
+        var meta = {};
+        var match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text);
+        if (!match) { return meta; }
+        match[1].split(/\r?\n/).forEach(function (line) {
+          var pos = line.indexOf(':');
+          if (pos > 0) {
+            var key = line.slice(0, pos).trim().toLowerCase();
+            var value = line.slice(pos + 1).trim().replace(/^["']|["']$/g, '');
+            meta[key] = value;
+          }
+        });
+        return meta;
       }
 
-      window.scrollTo(0, Math.round(currentY));
-      requestAnimationFrame(smoothScrollLoop);
-    }
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
 
-    // 1. Desktop Mouse Wheel Scroll
-    window.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      targetY += e.deltaY;
-      targetY = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, targetY));
-    }, { passive: false });
+      function makeCard(slug, meta, index) {
+        var link = document.createElement('a');
+        link.className = 'study-card';
+        link.href = 'studies/' + slug + '/';
 
-    // 2. Mobile Finger Touch Scroll (Added to fix phone scrolling)
-    let touchStartY = 0;
-    window.addEventListener('touchstart', (e) => {
-      touchStartY = e.touches[0].clientY;
-    }, { passive: false });
+        var num = document.createElement('span');
+        num.className = 'study-num';
+        num.textContent = meta.number || pad(index + 1);
 
-    window.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-      const touchCurrentY = e.touches[0].clientY;
-      const deltaY = touchStartY - touchCurrentY;
-      targetY += deltaY;
-      targetY = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, targetY));
-      touchStartY = touchCurrentY;
-    }, { passive: false });
+        var main = document.createElement('span');
+        main.className = 'study-main';
 
-    // Start the smooth scroll animation loop
-    requestAnimationFrame(smoothScrollLoop);
+        var name = document.createElement('span');
+        name.className = 'study-name';
+        name.textContent = meta.name || slug;
+
+        var tag = document.createElement('span');
+        tag.className = 'study-tag';
+        tag.textContent = meta.tag || '';
+
+        main.appendChild(name);
+        main.appendChild(tag);
+
+        var published = (meta.status || '').toLowerCase() === 'published';
+        var status = document.createElement('span');
+        status.className = 'study-status' + (published ? ' published' : '');
+        status.textContent = published ? 'PUBLISHED' : 'DRAFT';
+
+        var arrow = document.createElement('span');
+        arrow.className = 'study-arrow';
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '→';
+
+        link.appendChild(num);
+        link.appendChild(main);
+        link.appendChild(status);
+        link.appendChild(arrow);
+        return link;
+      }
+
+      function showNote(message) {
+        if (note) {
+          note.textContent = message;
+        } else {
+          var fresh = document.createElement('div');
+          fresh.className = 'studies-note';
+          fresh.textContent = message;
+          list.appendChild(fresh);
+        }
+      }
+
+      fetch('studies/_index.json')
+        .then(function (res) {
+          if (!res.ok) { throw new Error('manifest'); }
+          return res.json();
+        })
+        .then(function (data) {
+          var slugs = data && data.studies;
+          if (!slugs || !slugs.length) { throw new Error('empty'); }
+          return Promise.all(slugs.map(function (slug) {
+            return fetch('studies/' + slug + '.md')
+              .then(function (res) {
+                if (!res.ok) { throw new Error(slug); }
+                return res.text();
+              })
+              .then(function (text) {
+                return { slug: slug, meta: parseFrontMatter(text) };
+              })
+              .catch(function () {
+                return null; // skip missing or broken files, keep the rest
+              });
+          }));
+        })
+        .then(function (items) {
+          var ok = items.filter(Boolean);
+          if (!ok.length) { throw new Error('files'); }
+          list.innerHTML = '';
+          ok.forEach(function (item, index) {
+            list.appendChild(makeCard(item.slug, item.meta, index));
+          });
+        })
+        .catch(function () {
+          if (location.protocol === 'file:') {
+            showNote('Opened directly from disk — the study list is generated from studies/*.md and needs the site to be hosted, or previewed with a local server (VS Code Live Server, or run: npx serve).');
+          } else {
+            showNote('Could not load the studies list — check studies/_index.json and the .md files inside studies/.');
+          }
+        });
+    })();
+
+    // Local-disk preview convenience: when this file is opened straight from
+    // disk (file://), browsers show a folder listing instead of loading a
+    // folder's index.html — so point the study cards directly at the file.
+    // On a hosted site (http/https) this does nothing; links stay clean.
+    (function () {
+      'use strict';
+      if (location.protocol !== 'file:') { return; }
+      var cards = document.querySelectorAll('#studiesList a.study-card');
+      Array.prototype.forEach.call(cards, function (a) {
+        var href = a.getAttribute('href') || '';
+        if (href.slice(-1) === '/') { a.setAttribute('href', href + 'index.html'); }
+      });
+    })();
   </script>
 </body>
+
 </html>
