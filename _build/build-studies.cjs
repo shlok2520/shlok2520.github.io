@@ -11,7 +11,9 @@
  *   3. dist/index.html                      home page with the study cards baked in
  *   4. dist/studies/<slug>/index.html       one real page per study — a clean,
  *                                            shareable link with no "#" in the URL
- *   5. copies study.html + the .md files    fallback for old bookmarked links
+ *   5. copies study.html + the whole studies/ folder (fallback for old links)
+ *   6. copies every loose asset next to index.html — News.png, photos, any
+ *      asset folders — so the live site actually shows your images
  *
  * You never edit HTML — edit the .md files, then run this (or let GitHub run it
  * for you automatically on every push — see .github/workflows/deploy.yml).
@@ -33,6 +35,9 @@ if (typeof marked.parse !== 'function') {
 const ROOT = path.join(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 const STUDIES_DIR = path.join(ROOT, 'studies');
+
+// Counts every non-page file shipped alongside the built site (images etc.).
+let assetsCopied = 0;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -64,6 +69,17 @@ function splitFrontMatter(text) {
 
 function isPublished(meta) {
   return String(meta.status || '').toLowerCase() === 'published';
+}
+
+// Recursively copy a folder (images and other loose assets).
+function copyDir(src, dest) {
+  fs.mkdirSync(dest, { recursive: true });
+  fs.readdirSync(src).forEach(function (entry) {
+    const s = path.join(src, entry);
+    const d = path.join(dest, entry);
+    if (fs.statSync(s).isDirectory()) { copyDir(s, d); }
+    else { fs.copyFileSync(s, d); assetsCopied++; }
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -548,6 +564,11 @@ function main() {
   fs.rmSync(DIST, { recursive: true, force: true });
   fs.mkdirSync(path.join(DIST, 'studies'), { recursive: true });
 
+  // Safety net: a .nojekyll marker stops GitHub's publishing engine from
+  // hiding files that start with "_" (like studies/_index.json) on hosts
+  // that would otherwise process the folder. Harmless everywhere else.
+  fs.writeFileSync(path.join(DIST, '.nojekyll'), '');
+
   // 4. Home page with the cards baked in
   const indexHTML = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   const marker = /(<!--\s*studies-cards:start\s*-->)[\s\S]*?(<!--\s*studies-cards:end\s*-->)/;
@@ -569,12 +590,40 @@ function main() {
     fs.writeFileSync(path.join(dir, 'index.html'), studyPageHTML(study));
   });
 
-  // 6. Copy the fallback reader + the .md files (old links keep working)
+  // 6. Copy the fallback reader + the whole studies/ folder
+  //    (old links keep working; anything inside studies/ ships too)
   fs.copyFileSync(path.join(ROOT, 'study.html'), path.join(DIST, 'study.html'));
-  fs.readdirSync(STUDIES_DIR).forEach(function (f) {
-    if (f.endsWith('.md') || f.endsWith('.json')) {
-      fs.copyFileSync(path.join(STUDIES_DIR, f), path.join(DIST, 'studies', f));
+  copyDir(STUDIES_DIR, path.join(DIST, 'studies'));
+
+  // 6b. Images used inside a study: keep them in studies/images/ and write
+  //     them in the .md as images/whatever.png. They are copied into every
+  //     study folder so the reference resolves on the built pages as well.
+  const studyImages = path.join(STUDIES_DIR, 'images');
+  if (fs.existsSync(studyImages)) {
+    studies.forEach(function (study) {
+      copyDir(studyImages, path.join(DIST, 'studies', study.slug, 'images'));
+    });
+  }
+
+  // 6c. Loose assets at the repo root (News.png, shlok-photo.jpg, …) and any
+  //     plain asset folders (images/, assets/, …) — everything except the
+  //     files this build handles itself. Without this, the hosted site shows
+  //     the onerror placeholders instead of the real images.
+  const SKIP_ROOT_DIRS = ['studies', '_build', '.github', 'dist', 'node_modules', '.git'];
+  const SKIP_ROOT_FILES = ['index.html', 'study.html', '.gitignore', 'package.json', 'package-lock.json'];
+  fs.readdirSync(ROOT).forEach(function (entry) {
+    const full = path.join(ROOT, entry);
+    if (fs.statSync(full).isDirectory()) {
+      if (SKIP_ROOT_DIRS.indexOf(entry) === -1) {
+        copyDir(full, path.join(DIST, entry));
+      }
+      return;
     }
+    if (SKIP_ROOT_FILES.indexOf(entry) !== -1) { return; }
+    if (entry.startsWith('.')) { return; }                   // dotfiles (.nojekyll is written above)
+    if (entry.slice(-3).toLowerCase() === '.md') { return; } // docs stay in the repo, not on the site
+    fs.copyFileSync(full, path.join(DIST, entry));
+    assetsCopied++;
   });
 
   // 7. Summary
@@ -584,6 +633,9 @@ function main() {
     console.log('  dist/studies/' + study.slug + '/index.html   [' + state + ']  ' + (study.meta.name || study.slug));
   });
   console.log('  dist/index.html                    (cards baked in)');
+  if (assetsCopied) {
+    console.log('  + ' + assetsCopied + ' asset file(s) copied alongside the pages (images, …)');
+  }
   console.log('Done. Host the dist/ folder — every study now has a clean link with no "#".');
 }
 
